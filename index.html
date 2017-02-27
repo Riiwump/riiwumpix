@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+	<link rel="icon" href="./favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <meta name="description" content="Now with 87% less dog filter.">
+    <meta name="author" content="WumPix Channel">
+    <meta property="og:title" name="Title" content="WumPix Channel"/>
+    <meta property="og:description" name="Description"
+          content="Now with 87% less dog filter."/>
+    <meta property="og:image" name="Image" content="https://i.imgur.com/TfnI2NC.png"/>
+    <meta property="og:url" name="URL" content="https://clubwumpus.github.io/wumpix/"/>
+	<title>WumPix Channel</title>
+      <link rel="stylesheet" href="style.css">
+</head>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>
+var click1 = polyAudio("snd/click1.mp3", 10);
+var click2 = polyAudio("snd/click2.mp3", 10);
+var click3 = polyAudio("snd/click3.mp3", 10);
+var click4 = polyAudio("snd/click4.mp3", 10);
+var click5 = polyAudio("snd/click5.mp3", 10);
+var hover = polyAudio("snd/hover.mp3", 5);
+var hbClick = 0;
+var bClick = 1;
+
+function incrementHB() {
+if (hbClick == 5) {
+	hbClick = 0;
+	return hbClick;
+ } else if (hbClick < 5) {
+	hbClick += 0.5;
+	return hbClick;
+ }
+}
+
+function incrementB() {
+if (bClick == 6) {
+	bClick = 1;
+	return bClick;
+ } else if (bClick < 6) {
+	bClick += 0.5;
+	return bClick;
+ }
+}
+
+function image() {
+var url = document.getElementById("piclink").value;
+if (!/^https?:\/\//i.test(url)) {
+    url = 'http://' + url;
+}
+
+var imgLink = "url('" + url + "')"
+	document.getElementById("pic").style.backgroundImage = imgLink;
+	};
+
+function doBrighten() { click1.play(); incrementB(); hbClick = 0; document.getElementById("pic").style.webkitFilter = "brightness(" + bClick + ")"; };
+function doSepia() { click2.play(); hbClick = 0; bClick = 0; document.getElementById("pic").style.webkitFilter = "brightness(1.3) contrast(1.2) sepia(1)"; };
+function doHardboil() { click3.play(); incrementHB(); bClick = 0; document.getElementById("pic").style.webkitFilter = "brightness(" + hbClick + ") contrast(10) grayscale(1) saturate(10)"; };
+function doZap() { click5.play(); hbClick = 0; bClick = 0; document.getElementById("pic").style.webkitFilter = "invert(1)"; };
+function doReset() { click4.play(); hbClick = 0; bClick = 0; document.getElementById("pic").style.webkitFilter = "blur(0px)"; };
+function doExit() { click4.play(); window.location.href = 'https://clubwumpus.github.io/wumpmenu/'; };
+
+function polyAudio(path, copies) {
+  var elems = [], index = 0
+  for (var i = 0; i < 16; i++) elems.push(new Audio(path))
+  return {
+    play: function() {
+      if (window.chrome) elems[index].load()
+      elems[index].play()
+      index = (index + 1) % copies
+    }
+  }
+}
+
+function audioFade() {
+    var backgroundAudio=document.getElementById("bgm");
+	backgroundAudio.volume = 0;
+	$(backgroundAudio).animate({volume: 0.75}, 1500);
+	backgroundAudio.setAttribute("oncanplay", "#");
+}
+
+</script>
+<body>
+
+<div id="menu" class="menu">
+<input type="text" id="piclink" value="" placeholder="Enter an image URL..." onkeydown = "if (event.keyCode == 13) image();">
+<div id="picSpace">
+<div id="pic"></div>
+</div>
+<a href="#" class="button" onclick="doBrighten(); "data-balloon="Brighten" data-balloon-pos="up" onmouseover="hover.play();"></a>
+<div class="button one" onclick="doSepia();" data-balloon="Sepiatone" data-balloon-pos="up" onmouseover="hover.play();"></div>
+<div class="button two" onclick="doZap();" data-balloon="Zap!" data-balloon-pos="up" onmouseover="hover.play();"></div>
+<div class="button three" onclick="doHardboil();" data-balloon="Hard-Boiled" data-balloon-pos="up" onmouseover="hover.play();"></div>
+<div class="button four" onclick="doReset();" data-balloon="Reset" data-balloon-pos="up" onmouseover="hover.play();"></div>
+<div class="button five" onclick="doExit();" data-balloon="Exit" data-balloon-pos="up" onmouseover="hover.play();"></div>
+</div>
+</body>
+<audio id="bgm" src="snd/bgm.mp3" loop=1 auto autoplay oncanplay="audioFade()"></audio>
+</html>
